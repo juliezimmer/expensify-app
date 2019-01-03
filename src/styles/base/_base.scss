@@ -1,0 +1,28 @@
+// styles in this file apply to the entire application, wherever the selector might be.
+
+// this allows us to use rem as base 10
+// 16 * .625 = 10 
+html {
+   font-size: 62.5%; 
+}
+
+body {
+   font-family: Helvetica, Arial, sans-serif;
+   font-size: $m-size;
+}
+
+// applies when any button is active
+button {
+  cursor: pointer; 
+}
+
+// using pseudo class selector :disabled. Whenever a button is disabled, this applies. 
+button:disabled {
+   cursor: default;
+}
+
+.is-active {
+   // font-weight will be bold when link is active
+   font-weight: bold;
+}
+
