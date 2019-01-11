@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import AppRouter from './routers/AppRouter';
 import configureStore from './store/configureStore';
 import { addExpense } from './actions/expenses';
@@ -9,6 +10,7 @@ import  getFilteredExpenses  from './selectors/expenses'; // this is designated 
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 
+// This is the Redux Store
 const store = configureStore(); // this gives us access to store.dispatch, store.subscribe, store.getState
 
 // Add an expense
@@ -19,11 +21,21 @@ store.dispatch(addExpense({ description:'Gas bill' }))
 // set a text filter
 store.dispatch(setTextFilter('water'));
 
+setTimeout(() => {
+   store.dispatch(setTextFilter('rent'));
+}, 3000)
+
 // get the filtered expenses
 const state = store.getState();
 const filteredExpenses = getFilteredExpenses(state.expenses, state.filters);
 console.log(filteredExpenses);
 console.log(store.getState()); // logs default state to the console
 
-ReactDOM.render(<AppRouter />, document.getElementById('app')); 
+const jsx = ( // store refers to the name of the Redux Store, defined on line 14
+   <Provider store={store}>
+      <AppRouter />
+   </Provider>
+);
+
+ReactDOM.render(jsx, document.getElementById('app')); 
 
