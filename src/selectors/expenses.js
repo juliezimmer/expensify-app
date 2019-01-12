@@ -1,3 +1,6 @@
+// was formerly getFilteredExpenses
+// const getFilteredExpenses = 
+// imported as selectedExpenses in src/components/ExpenseList.js
 export default (expenses, {text, sortBy, startDate, endDate}) => {
    return expenses.filter((expense) => {
       const startDateMatch = typeof startDate !== 'number' || expenses.createdAt >= startDate;

@@ -15,15 +15,9 @@ const store = configureStore(); // this gives us access to store.dispatch, store
 
 // Add an expense
 // expense description is passed into the method as an object. this one only contains the description.
-store.dispatch(addExpense({ description:'Water bill' }))
-store.dispatch(addExpense({ description:'Gas bill' }))
-
-// set a text filter
-store.dispatch(setTextFilter('water'));
-
-setTimeout(() => {
-   store.dispatch(setTextFilter('rent'));
-}, 3000)
+store.dispatch(addExpense({ description:'Water bill', amount: 4500 }));
+store.dispatch(addExpense({ description:'Gas bill', createdAt: 1000 }))
+store.dispatch(addExpense({ description:'Rent', amount: 109500 }));
 
 // get the filtered expenses
 const state = store.getState();
