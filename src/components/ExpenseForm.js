@@ -16,7 +16,8 @@ export default class ExpenseForm extends React.Component {
       note: '',
       amount: '',
       createdAt: moment(), // createdAt is set equal to a new instance of 'moment()'.  This is passed down to <SingleDatePicker as date={this.state.createdAt }
-      calendarFocused: false // determines whether the calendar is showing on the screen
+      calendarFocused: false,
+      error: '' // determines whether the calendar is showing on the screen
    };
    // this requires the event object,'e',  be passed in as the argument. onDescriptionChange is where the value of the description input lives.
    // whenever the text input of the description changes, onDescriptionChange runs. onDescriptionChange gets the value of the text from the event object and updates the state using this.setState, passing in the new value for description. 
@@ -51,11 +52,28 @@ export default class ExpenseForm extends React.Component {
    // onSubmit Handler
    onSubmit = (e) => {
       e.preventDefault();
+
+      // if there is no description or amount
+      if (!this.state.description || !this.state.amount) {
+         // set error state equal to 'Please provide a description and amount for the expense'
+         this.setState(() =>({ error: 'Please include a description and amount for each expense submitted'}));
+      } else {
+         this.setState(() => ({ error: '' }))
+         console.log('submitted');
+         this.props.onSubmit({
+            description: this.state.description,
+            // amount isn't in the correct, it's currently a string,so parseFloat is used. parseFloat takes in the string and leaves the decimal in place but converts the string to a number based on usiong base 10. The resulting parsed string is mutliplied by 100 because everything is converted from cents.
+            amount: parseFloat(this.state.amount, 10) * 100,
+            createdAt: this.state.createdAt.valueOf(),
+            note: this.state.note
+         })
+      }
    }
 
    render() {
       return (
          <div>
+            {this.state.error && <p>{this.state.error}</p>}
             <form onSubmit={this.onSubmit}>
                <input type="text" 
                   placeholder="Description"
