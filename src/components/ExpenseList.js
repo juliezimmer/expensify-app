@@ -18,10 +18,10 @@ const mapStateToProps = (state) => {
    // this returns an object
    return {
       expenses: selectExpenses(state.expenses, state.filters)
-      
    };
 };
- export default connect(mapStateToProps)(ExpenseList);
+
+export default connect(mapStateToProps)(ExpenseList);
 
 
 

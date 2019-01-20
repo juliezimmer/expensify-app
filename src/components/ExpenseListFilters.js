@@ -1,16 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { setTextFilter, sortByDate, sortByAmount  } from '../actions/filters';
-// import {setTextFilter, sortByDate, sortByAmount } from '../actions/filters';
 
 const ExpenseListFilters = (props) => (
    <div>
-      <input type="text" 
+      <input 
+         type="text" 
          value={props.filters.text} 
          onChange={(e) => {
             props.dispatch(setTextFilter(e.target.value));
             console.log(e.target.value);
-         }} />
+         }} 
+      />
       <select
          value={props.filters.sortBy}
          onChange={(e) => {
@@ -32,6 +33,7 @@ const mapStateToProps = (state) => {
       filters: state.filters // this means that ExpenseListFilters will have access to props.filters.text
    }
 };
+
 export default connect(mapStateToProps)(ExpenseListFilters); 
 
 

@@ -6,16 +6,17 @@ import { addExpense } from '../actions/expenses';
 const AddExpensePage = (props) => (
    <div>
       <h1>Add Expense</h1>
-      <ExpenseForm />
+      <ExpenseForm 
+         onSubmit={(expense) => {
+            // adds the data to the Redux Store
+            props.dispatch(addExpense(expense));
+            // this reroutes user to Dashboard page after expense submitted
+            // a string, the path, is passed into push().
+            props.history.push('/');
+         }}
+      />
    </div>
 );
 
 export default connect()(AddExpensePage);
-/* 
-onSubmit={(expense) => {
-   props.dispatch(addExpense(expense));
-   // this helps reroute user back to Dashboard page
-   // a string, the path, is passed into push.
-   props.history.push('/');
-}}
-*/
+

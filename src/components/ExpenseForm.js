@@ -3,52 +3,68 @@ import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css'; 
 
-// creating the date
-const now = moment();
-console.log(now.format('MMM Do, YYYY'));
 // an instance of this class is rendered in the AddExpensePage component.
 export default class ExpenseForm extends React.Component {
-   state = {
-      description: '',
-      note: '',
-      amount: '',
-      createdAt: moment(),
-      calendarFocused: false, // default state
-   };
+   constructor(props) {
+      super(props);
+
+      this.state = {
+         description: props.expense ? props.expense.description : '',
+         note: props.expense ? props.expense.note : '',
+         amount: props.expense ? (props.expense.amount / 100).toString() : '',
+         createdAt: props.expense ? moment(props.expense.createdAt) : moment(),
+         calendarFocused: false,
+         error: ''
+      }
+   }  
 // whenever the text input of the description changes, onDescriptionChange runs.
 // onDescriptionChange gets the value of the text from the event object and updates the state using this.setState, and passing in the new value for description. 
-   onDesriptionChange = (e) => {
-      const description  = e.target.value;
-      // the description state is set equal to the value of the description variable. 
-      this.setState(() => ({ description: description  }));
-      // using ES6 shorthand: 
-      //   this.setState(() => ({ description }));
+   onDescriptionChange = (e) => {
+      const description = e.target.value;
+      this.setState(() => ({ description }));
    };
    onNoteChange = (e) => {
       const note = e.target.value;
-      this.setState(() => ({ note: e.target.value}));
+      this.setState(() => ({ note }));
    };
    onAmountChange = (e) => {
-      const amount= e.target.value;
-      if (amount.match(/ ^\d*(\.\d{0,2})?$/)) {
-         this.setState(() => ({amount: amount}));
+      const amount = e.target.value;
+      if (!amount || amount.match(/^\d{1,}(\.\d{0,2})?$/)) { // '||'  allows user to clear the value from amount input field
+         this.setState(() => ({amount }));
       }
    };
    onDateChange = (createdAt) => {
-      this.setState(() => ({createdAt: createdAt}));
+      if (createdAt) {
+         this.setState(() => ({createdAt }));
+      }   
    };
    onFocusChange = ({ focused }) => {
       this.setState(() => ({ calendarFocused: focused }));
    };
+   onSubmit = (e) => {
+      e.preventDefault(); // prevents browser from going through the full page refresh.
+      if (!this.state.description || !this.state.amount) {
+         this.setState(() => ({error: "Please add a description and amount for the expense"}));
+      } else {
+         this.setState(() => ({ error: ''}));
+         this.props.onSubmit({
+            description: this.state.description,
+            amount: parseFloat(this.state.amount, 10) * 100,
+            createdAt: this.state.createdAt.valueOf(),
+            note: this.state.note
+         });
+      }
+   };
    render() {
       return (
          <div>
-            <form>
+         {this.state.error && <p>{this.state.error}</p>}
+            <form onSubmit={this.onSubmit} >
                <input 
                   type="text"
                   placeholder="Description"
-                  autoFocus 
-                  value={this.state.description}  
+                  autoFocus
+                  value={this.state.description}
                   onChange={this.onDescriptionChange}
                />
                <input 
@@ -62,14 +78,15 @@ export default class ExpenseForm extends React.Component {
                   onDateChange={this.onDateChange}
                   focused={this.state.calendarFocused}
                   onFocusChange={this.onFocusChange}
-                  numberOfMonths={1}
-                  isOutsideRange={() => false}
+                  numberOfMonths={1} // controls how many calendar months show up when the date is clicked. 
+                  isOutsideRange={() => false} // determines whether chosen date should be available to pick. This allows all available dates to be chosen.
                />
                <textarea 
-                  placeholder="Add a note regarding this expense (optional)" 
+                  placeholder="Add a note (optional)" 
                   value={this.state.note}
                   onChange={this.onNoteChange}
-                  ></textarea>
+               >
+               </textarea>
                <button>Add Expense</button>
             </form>
          </div>
@@ -77,33 +94,12 @@ export default class ExpenseForm extends React.Component {
    }
 }
 
- /*  onDateChange = (createdAt) => {
-      if (createdAt) { 
-         // state is set to the value of 'createdAt' that was passed into the function
-         this.setState(() => ({ createdAt: createdAt })); //updater object that implicitely returns an object 
-      };  
-   }; 
+ 
    
-   onSubmit = (e) => {
-      e.preventDefault(); */
+   
 
       
-     /* if (!this.state.description || !this.state.amount) {
-         // set error state equal to 'Please provide a description and amount for the expense'
-         this.setState(() =>({ error: 'Please include a description and amount for each expense submitted'}));
-      } else {
-         this.setState(() => ({ error: '' }))
-         console.log('submitted');
-         this.props.onSubmit({
-            description: this.state.description,
-            // amount isn't in the correct, it's currently a string,so parseFloat is used. parseFloat takes in the string and leaves the decimal in place but converts the string to a number based on usiong base 10. The resulting parsed string is mutliplied by 100 because everything is converted from cents. */
-           /* amount: parseFloat(this.state.amount, 10) * 100,
-            createdAt: this.state.createdAt.valueOf(),
-            note: this.state.note
-         });
-      }
-   };
-} */
+
 
 
 
