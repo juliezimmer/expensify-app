@@ -1,4 +1,6 @@
-// was formerly getFilteredExpenses: const getFilteredExpenses = 
+import moment from 'moment';
+
+// was formerly getFilteredExpenses: const getFilteredExpenses = () => {}
 // imported as selectedExpenses in src/components/ExpenseList.js
 // the exporty default takes in two arguments:
 //    1. array of expenses : expenses
@@ -8,8 +10,9 @@
 //   expenses: selectExpenses(state.expenses, state.filters), the key-value pair in the return object produced by the const mapStateToProps.
 export default (expenses, {text, sortBy, startDate, endDate}) => {
    return expenses.filter((expense) => {
-      const startDateMatch = typeof startDate !== 'number' || expense.createdAt >= startDate;
-      const endDateMatch = typeof endDate !== 'number' || expense.createdAt <= endDate;
+      const createdAtMoment = moment(expense.createdAt);
+      const startDateMatch = startDate ? startDate.isSameOrBefore(createdAtMoment, 'day') : true;
+      const endDateMatch = endDate ? endDate.isSameOrAfter(createdAtMoment, 'day') : true;
       const textMatch = expense.description.toLowerCase().includes(text.toLowerCase());
 
       return startDateMatch && endDateMatch && textMatch;
