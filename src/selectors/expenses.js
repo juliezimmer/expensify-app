@@ -2,7 +2,7 @@ import moment from 'moment';
 
 // was formerly getFilteredExpenses: const getFilteredExpenses = () => {}
 // imported as selectedExpenses in src/components/ExpenseList.js
-// the exporty default takes in two arguments:
+// the export default takes in two arguments:
 //    1. array of expenses : expenses
 //    2. an object of all of the filters
 // and returns a filtered and sorted array of expenses.
